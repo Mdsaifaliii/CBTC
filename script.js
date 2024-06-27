@@ -1,56 +1,55 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const taskInput = document.getElementById("task-input");
-  const addTaskBtn = document.getElementById("add-task-btn");
-  const taskList = document.getElementById("task-list");
-  const completedTaskList = document.getElementById("completed-task-list");
+const apiKey = "af59438c804c5c14273363574d5a4ce4";
+const apiUrl =
+  "https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
 
-  addTaskBtn.addEventListener("click", addTask);
+const searchBox = document.querySelector(".search input");
+const searchBtn = document.querySelector(".search button");
+const weatherIcon = document.querySelector(".weather-icon");
 
-  function addTask() {
-    const taskText = taskInput.value.trim();
-    if (taskText !== "") {
-      const taskItem = createTaskItem(taskText);
-      taskList.appendChild(taskItem);
-      taskInput.value = "";
+async function checkWeather(city) {
+  try {
+    const response = await fetch(apiUrl + city + `&appid=${apiKey}`);
+    const data = await response.json();
+    if (data.cod === "404") {
+      alert("City not found!");
+      return;
     }
+    document.querySelector(".city").innerHTML = data.name;
+    document.querySelector(".temp").innerHTML =
+      Math.round(data.main.temp) + "°C";
+    document.querySelector(".humidity").innerHTML = data.main.humidity + "%";
+    document.querySelector(".wind").innerHTML = data.wind.speed + " km/h";
+
+    const weatherMain = data.weather[0].main.toLowerCase();
+    if (weatherMain === "clouds") {
+      weatherIcon.src = "clouds.png";
+    } else if (weatherMain === "clear") {
+      weatherIcon.src = "clear.png";
+    } else if (weatherMain === "rain") {
+      weatherIcon.src = "rain.png";
+    } else if (weatherMain === "snow") {
+      weatherIcon.src = "snow.png";
+    } else if (weatherMain === "drizzle") {
+      weatherIcon.src = "drizzle.png";
+    } else if (weatherMain === "mist") {
+      weatherIcon.src = "mist.png";
+    } else if (weatherMain === "wind") {
+      weatherIcon.src = "wind.png";
+    } else {
+      weatherIcon.src = "default.png";
+    }
+    document.querySelector(".weather").style.display = "block";
+  } catch (error) {
+    console.error("Error fetching weather data: ", error);
   }
+}
 
-  function createTaskItem(taskText) {
-    const taskItem = document.createElement("li");
-    const taskContent = document.createElement("span");
-    const timestamp = document.createElement("span");
-    const completeBtn = document.createElement("button");
-
-    taskContent.textContent = taskText;
-    timestamp.textContent = `Added on: ${new Date().toLocaleString()}`;
-    timestamp.className = "timestamp";
-    completeBtn.textContent = "Complete";
-    completeBtn.className = "complete-btn";
-
-    completeBtn.addEventListener("click", () =>
-      completeTask(taskItem, taskText)
-    );
-
-    taskItem.appendChild(taskContent);
-    taskItem.appendChild(timestamp);
-    taskItem.appendChild(completeBtn);
-
-    return taskItem;
-  }
-
-  function completeTask(taskItem, taskText) {
-    taskList.removeChild(taskItem);
-    const completedItem = document.createElement("li");
-    const taskContent = document.createElement("span");
-    const timestamp = document.createElement("span");
-
-    taskContent.textContent = taskText;
-    timestamp.textContent = `Completed on: ${new Date().toLocaleString()}`;
-    timestamp.className = "timestamp";
-
-    completedItem.appendChild(taskContent);
-    completedItem.appendChild(timestamp);
-    completedTaskList.appendChild(completedItem);
-  }
+searchBtn.addEventListener("click", () => {
+  checkWeather(searchBox.value);
 });
 
+searchBox.addEventListener("keypress", (event) => {
+  if (event.key === "Enter") {
+    checkWeather(searchBox.value);
+  }
+});

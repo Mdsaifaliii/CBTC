@@ -3,21 +3,38 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>To-Do List App</title>
+    <title>Weathervue App</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <div class="container">
-      <h1>To-Do List App</h1>
-      <div class="input-container">
-        <input type="text" id="task-input" placeholder="Enter a new task"/>
-        <button id="add-task-btn">Add Task</button>
+      <div class="search">
+        <input type="text" placeholder="Enter city name" spellcheck="false" />
+        <button><img src="search.png" /></button>
       </div>
-      <h2>Tasks</h2>
-      <ul id="task-list"></ul>
-      <h2>Completed Tasks</h2>
-      <ul id="completed-task-list"></ul>
+      <div class="weather">
+        <img src="rain.png" class="weather-icon" />
+        <h1 class="temp">24°c</h1>
+        <h1 class="city">Delhi</h1>
+        <div class="details">
+          <div class="col">
+            <img src="humidity.png" />
+            <div>
+              <p class="humidity">60%</p>
+              <p>Humidity</p>
+            </div>
+          </div>
+          <div class="col">
+            <img src="wind.png" />
+            <div>
+              <p class="wind">20 km/h</p>
+              <p>Wind</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+
     <script src="script.js"></script>
   </body>
 </html>
